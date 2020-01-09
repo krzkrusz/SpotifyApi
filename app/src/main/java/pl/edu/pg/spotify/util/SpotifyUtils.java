@@ -11,7 +11,7 @@ import com.spotify.protocol.types.Track;
 
 
 public class SpotifyUtils {
-    private static final String CLIENT_ID = "437d0cfe01824ddaaadc89bf865052b9";
+    private static final String CLIENT_ID = "3006770b883847ecb528e34823709ac0";
     private static final String REDIRECT_URI = "http://localhost:8888/callback";
     private static SpotifyAppRemote mSpotifyAppRemote;
 
