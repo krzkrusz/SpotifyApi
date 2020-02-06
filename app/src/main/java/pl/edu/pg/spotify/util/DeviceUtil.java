@@ -30,8 +30,11 @@ public class DeviceUtil {
             ex.printStackTrace();
         }
         final String clearedFromNewLines = holder.replace("\n", "");
-        final int onlyCPUusageLastIndex = clearedFromNewLines.indexOf("IOW");
-        return clearedFromNewLines.substring(0, onlyCPUusageLastIndex - 1);
+        final int indexOfCachedEnd = clearedFromNewLines.indexOf("cached") + 6;
+        final int indexOfUser = clearedFromNewLines.indexOf("user");
+        return clearedFromNewLines
+                .substring(indexOfCachedEnd, indexOfUser - 2)
+                .replace("cpu", " CPU");
     }
 
 
