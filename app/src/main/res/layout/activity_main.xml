@@ -15,4 +15,10 @@
         android:layout_marginTop="100dp"
         android:text="TextView" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="207dp"
+        android:layout_height="56dp"
+        android:text="TextView" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

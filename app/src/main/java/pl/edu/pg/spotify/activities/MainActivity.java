@@ -1,6 +1,9 @@
 package pl.edu.pg.spotify.activities;
 
 import android.app.ActivityManager;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,7 +19,8 @@ import pl.edu.pg.spotify.util.SpotifyUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView textView;
+    TextView cpuTextView;
+    TextView ramTextView;
 
     private RefreshHandler mRedrawHandler = new RefreshHandler();
 
@@ -25,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.textView);
+        cpuTextView = findViewById(R.id.textView);
+        ramTextView = findViewById(R.id.textView2);
 
-        textView.setText(getCurrentCPUusage());
+        cpuTextView.setText(getCurrentCPUusage());
+        ramTextView.setText(getCurrentRAMUsage());
 
         updateUI();
     }
@@ -47,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(){
         mRedrawHandler.sleep(1000);
-        textView.setText(getCurrentCPUusage());
+        cpuTextView.setText(getCurrentCPUusage());
+        ramTextView.setText(getCurrentRAMUsage());
+        getNetworkInfo();
     }
 
     private String getCurrentCPUusage() {
@@ -81,6 +89,20 @@ public class MainActivity extends AppCompatActivity {
         final ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         activityManager.getMemoryInfo(mi);
         return (mi.totalMem - mi.availMem) / bytesInMegabyte + "MB";
+    }
+
+    private void getNetworkInfo() {
+        final ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            // np. MOBILE lub WIFI
+            final String networkType = activeNetwork.getTypeName();
+            // np. LTE
+            final String subTypeName = activeNetwork.getSubtypeName();
+        } else {
+            // not connected to the internet
+        }
     }
 
 
