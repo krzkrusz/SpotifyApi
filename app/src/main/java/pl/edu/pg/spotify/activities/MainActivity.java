@@ -26,15 +26,14 @@ public class MainActivity extends AppCompatActivity {
         cpuTextView = findViewById(R.id.textView);
         ramTextView = findViewById(R.id.textView2);
 
-        cpuTextView.setText(DeviceUtil.getCurrentCPUusage());
-        ramTextView.setText(DeviceUtil.getCurrentRAMUsage(getSystemService(ACTIVITY_SERVICE)));
-        DeviceUtil.getNetworkInfo(getApplicationContext());
         updateUI();
+        DeviceUtil.takeScreenshot(MainActivity.this, getWindow());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        SpotifyUtils.connect(this);
     }
 
     @Override
@@ -44,10 +43,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI(){
-        mRedrawHandler.sleep(1000);
-        cpuTextView.setText(DeviceUtil.getCurrentCPUusage());
+        //cpuTextView.setText(DeviceUtil.getCurrentCPUusage());
         ramTextView.setText(DeviceUtil.getCurrentRAMUsage(getSystemService(ACTIVITY_SERVICE)));
         DeviceUtil.getNetworkInfo(getApplicationContext());
+        mRedrawHandler.sleep(1000);
+
     }
 
     class RefreshHandler extends Handler {
