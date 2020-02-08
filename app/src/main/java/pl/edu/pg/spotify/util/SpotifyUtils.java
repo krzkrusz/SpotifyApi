@@ -9,11 +9,14 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.mappers.jackson.JacksonMapper;
 import com.spotify.protocol.types.Track;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 
 public class SpotifyUtils {
-    private static final String CLIENT_ID = "3006770b883847ecb528e34823709ac0";
+    private static final String CLIENT_ID = "437d0cfe01824ddaaadc89bf865052b9";
     private static final String REDIRECT_URI = "http://localhost:8888/callback";
     private static SpotifyAppRemote mSpotifyAppRemote;
+    private static AtomicReference<Track> track = new AtomicReference<>();
 
     public static void connect(Context context) {
         ConnectionParams connectionParams =
@@ -43,6 +46,10 @@ public class SpotifyUtils {
                 });
     }
 
+    public static AtomicReference<Track> getTrack() {
+        return track;
+    }
+
     private static void connected() {
         // Play a playlist
         mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL");
@@ -53,6 +60,7 @@ public class SpotifyUtils {
                 .setEventCallback(playerState -> {
                     final Track track = playerState.track;
                     if (track != null) {
+                        getTrack().set(track);
                         Log.d("MainActivity", track.name + " by " + track.artist.name);
                     }
                 });
@@ -62,4 +70,26 @@ public class SpotifyUtils {
         if (mSpotifyAppRemote != null)
             SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
+
+    public static String getCurrentTrackInfo() {
+        Track track = getTrack().get();
+        if (track == null) {
+            return "no track";
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append("uri: ").append(track.uri).append("\n")
+                    .append("duration: ").append(track.duration).append("\n")
+                    .append("name: ").append(track.name).append("\n")
+                    .append("artist: ").append(track.artist).append("\n")
+                    .append("album: ").append(track.album).append("\n");
+            return builder.toString();
+        }
+    }
+
+    public static void nextSong() {
+        if (mSpotifyAppRemote != null) {
+           mSpotifyAppRemote.getPlayerApi().skipNext();
+        }
+    }
+
 }

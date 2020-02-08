@@ -58,7 +58,16 @@ public class DeviceUtil {
     /**
      * Pass (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE) here in main actvity
      */
-    public static String getGsmCellInfo(final TelephonyManager telephony) {
+    public static String getGsmCellInfo(final TelephonyManager telephony, Activity activity) {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[] {
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.READ_PHONE_STATE
+            }
+            , 0);
+        }
+
         if (telephony.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
             try {
                 final GsmCellLocation location = (GsmCellLocation) telephony.getCellLocation();
@@ -132,5 +141,4 @@ public class DeviceUtil {
             );
         }
     }
-
 }
